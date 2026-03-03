@@ -56,7 +56,13 @@
       "href": "https://dashboard.mintlify.com"
     }
   },
-  "contextual": {},
+  "contextual": {"options": [
+    "copy",
+    "view",
+    "chatgpt",
+    "claude",
+    "perplexity"
+  ]},
   "footer": {
     "socials": {
       "x": "https://x.com/mintlify",
