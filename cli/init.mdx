@@ -1,0 +1,123 @@
+---
+title: "skaro init"
+description: "Initialize Skaro in the current project directory."
+---
+
+`skaro init` creates the `.skaro/` directory structure and bootstraps your project with templates, constitution, and configuration files.
+
+## Usage
+
+```bash
+skaro init [OPTIONS]
+```
+
+| Option | Description |
+|---|---|
+| `--name TEXT` | Project name (default: current directory name) |
+| `--description TEXT` | Project description |
+| `--no-git` | Skip Git repository detection |
+
+## Init Wizard
+
+When you run `skaro init`, an interactive wizard guides you through setup:
+
+<Steps>
+  <Step title="Language">
+    Choose between English and Russian. This sets the language for CLI output, prompts, and LLM instructions. You can change it later in `config.yaml`.
+  </Step>
+  <Step title="License">
+    Skaro is licensed under AGPL-3.0. The wizard shows the license and asks for confirmation before proceeding.
+  </Step>
+  <Step title="Project Name">
+    Enter a name for your project. Defaults to the current directory name.
+  </Step>
+  <Step title="Project Detection">
+    Skaro checks whether you're in an existing project (has a `.git` directory or 3+ source files). If so, it offers two initialization paths — see below.
+  </Step>
+</Steps>
+
+## New Project
+
+If no existing project is detected, Skaro creates the standard `.skaro/` structure:
+
+```
+.skaro/
+├── constitution.md
+├── architecture/
+│   └── architecture.md
+├── config.yaml
+├── templates/
+│   ├── constitution-template.md
+│   ├── spec-template.md
+│   ├── plan-template.md
+│   ├── ai-notes-template.md
+│   ├── adr-template.md
+│   └── ...
+├── milestones/
+├── docs/
+└── ops/
+```
+
+It also creates `.skaroignore` in the project root and adds Skaro-specific entries to `.gitignore` (secrets, token usage logs).
+
+Your next steps: fill in the constitution, configure an LLM provider, and launch the dashboard.
+
+## Existing Project
+
+When Skaro detects an existing project, it offers two options:
+
+### Option A — Manual Setup
+
+Templates are created but left empty. You fill in the constitution, architecture, and other artifacts yourself. Best for:
+
+- Sensitive codebases you don't want to send to an LLM
+- Projects where you already know the architecture well
+- Quick setup when you'll use the dashboard later
+
+### Option B — Automatic LLM Analysis
+
+Skaro scans your repository, sends the code to your configured LLM, and generates initial artifacts automatically. The wizard guides you through:
+
+1. **LLM Configuration** — choose provider, enter API key, select model
+2. **Repository Scan** — Skaro collects source files and estimates token count
+3. **Smart Sampling** — if the repo exceeds the token limit (default: 200,000), Skaro prioritizes important files and skips redundant ones
+4. **Privacy Confirmation** — you see which files will be sent and confirm before anything leaves your machine
+5. **Analysis** — the LLM generates constitution, architecture, and a dev plan
+
+<Warning>
+  Always review auto-generated artifacts. They are starting points, not final documents. The LLM may make incorrect assumptions about your project.
+</Warning>
+
+Generated artifacts include:
+
+- `.skaro/constitution.md` — extracted from codebase patterns
+- `.skaro/architecture/architecture.md` — inferred project structure
+- `.skaro/devplan/devplan.md` — suggested development roadmap
+
+## `.skaroignore`
+
+The `.skaroignore` file controls which files are excluded from LLM analysis during init (Option B). The syntax is identical to `.gitignore`. The default excludes secrets, credentials, database dumps, vendored code, and large assets.
+
+```text
+# Secrets
+.env
+*.pem
+*.key
+
+# Data
+*.sql
+*.sqlite3
+data/
+
+# Generated
+vendor/
+generated/
+
+# Large assets
+assets/
+media/
+```
+
+## Re-initialization
+
+If `.skaro/` already exists, `skaro init` warns you and asks for confirmation. Re-initialization resets approval flags but preserves task history and token usage data.

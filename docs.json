@@ -1,24 +1,60 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Skaro Starter Kit",
+  "name": "Skaro",
   "colors": {
     "primary": "#589df6",
     "light": "#f2f2f2",
     "dark": "#262626"
   },
   "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "getting-started/introduction",
+              "getting-started/installation",
+              "getting-started/quickstart",
+              "getting-started/core-concepts"
+            ]
+          },
+          {
+            "group": "CLI Reference",
+            "pages": [
+              "cli/init",
+              "cli/config"
+            ]
+          },
+          {
+            "group": "Web Dashboard",
+            "pages": [
+              "dashboard/overview"
+            ]
+          },
+          {
+            "group": "LLM Providers",
+            "pages": [
+              "providers/supported-providers"
+            ]
+          },
+          {
+            "group": "Project Structure",
+            "pages": [
+              "project-structure/skaro-directory"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/new-project"
             ]
           }
         ]
@@ -30,44 +66,22 @@
           "anchor": "GitHub",
           "href": "https://github.com/skarodev/skaro",
           "icon": "github"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
         }
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity"
+    ]
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {"options": [
-    "copy",
-    "view",
-    "chatgpt",
-    "claude",
-    "perplexity"
-  ]},
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/skarodev/skaro"
     }
   }
 }

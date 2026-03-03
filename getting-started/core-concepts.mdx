@@ -1,0 +1,105 @@
+---
+title: "Core Concepts"
+description: "Key concepts you need to understand before working with Skaro."
+---
+
+## The `.skaro/` Directory
+
+Every Skaro project has a `.skaro/` directory at the root. This is where all artifacts live — constitution, architecture, task specs, plans, and AI notes. The directory is version-controlled with Git, so your entire project context is reproducible and shareable.
+
+The key idea: **context comes from files, not from chat history.** When Skaro calls the LLM, it passes the relevant files from `.skaro/` as context. This means you can start a new chat session, switch to a different LLM, or hand off to a teammate — nothing is lost.
+
+See [.skaro/ Directory](/project-structure/skaro-directory) for the full file map.
+
+## Phases
+
+Every task in Skaro goes through a sequence of phases. Each phase has defined inputs, outputs, and a Definition of Done:
+
+| Phase | What Happens | Output |
+|---|---|---|
+| **Constitution** | Define project-level principles (stack, standards, constraints) | `constitution.md` |
+| **Architecture** | Describe system design, get LLM review, define invariants | `architecture.md`, ADRs, `invariants.md` |
+| **Clarify** | LLM asks questions to find gaps in your spec | `clarifications.md` |
+| **Plan** | LLM decomposes the task into stages | `plan.md`, `tasks.md` |
+| **Implement** | LLM generates code stage by stage | Code files + `AI_NOTES.md` per stage |
+| **Tests** | Run verification commands, generate tests | Test results |
+| **Review** | Cross-validate spec ↔ code ↔ architecture | Review findings |
+
+Constitution and Architecture are set up once per project. The remaining phases run per task.
+
+<Note>
+  Phases are sequential — you cannot skip Clarify and jump to Implement. Each phase builds on the output of the previous one.
+</Note>
+
+## Constitution
+
+The constitution is a Markdown file (`.skaro/constitution.md`) that defines the immutable principles of your project. Every LLM call references the constitution to maintain consistency across phases.
+
+A valid constitution must include six sections:
+
+1. **Stack** — language, framework, database, infrastructure (with specific versions)
+2. **Coding Standards** — linter, formatter, naming conventions
+3. **Testing** — minimum coverage, required test levels, framework
+4. **Constraints** — infrastructure, budget, compatibility limits
+5. **Security** — auth model, input validation, secrets storage
+6. **LLM Rules** — no stubs without justification, no duplication, always generate AI_NOTES
+
+You can validate completeness with `skaro constitution validate`. Skaro also ships [12 presets](/project-structure/constitution-presets) for popular frameworks (React, FastAPI, Django, etc.) to help you get started.
+
+## Artifacts
+
+Artifacts are the Markdown files that Skaro generates and manages throughout the development process. They are the single source of truth for your project:
+
+- **Project-level**: constitution, architecture, invariants, ADRs, dev plan
+- **Task-level**: spec, clarifications, plan, task decomposition, AI notes per stage
+
+All artifacts live in `.skaro/` and follow a consistent template-based structure. When a phase runs, it reads the relevant artifacts as input and writes new ones as output.
+
+## Roles
+
+Skaro divides LLM work into three roles, each covering specific phases:
+
+| Role | Phases | Typical Use |
+|---|---|---|
+| **architect** | architecture, devplan, plan, import_analyze | Strategic decisions, planning |
+| **coder** | implement, fix | Code generation |
+| **reviewer** | tests, clarify | Validation, question generation |
+
+Each role can use a different LLM provider and model. For example, you might use Claude for architecture decisions, Groq for fast code generation, and a local Ollama model for reviews. If a role is not configured, it falls back to the default LLM settings.
+
+See [Role-Based Routing](/providers/role-based-routing) for configuration details.
+
+## Milestones & Tasks
+
+Work in Skaro is organized into **milestones** and **tasks**:
+
+- A **milestone** is a group of related tasks (e.g., "MVP", "Authentication", "API v2")
+- A **task** is a single unit of work that goes through all phases independently
+
+Tasks are created either manually from the dashboard or automatically by the dev plan generator. Each task tracks its current phase and progress percentage.
+
+```
+.skaro/milestones/
+└── mvp/
+    ├── user-auth/
+    │   ├── spec.md
+    │   ├── clarifications.md
+    │   ├── plan.md
+    │   └── stages/
+    │       └── stage-01/
+    │           └── AI_NOTES.md
+    └── api-endpoints/
+        └── ...
+```
+
+## Definition of Done (DoD)
+
+Each phase has explicit completion criteria. For example, the Clarify phase is done when the LLM has asked at least 5 questions, all answers are recorded, and no TODO/TBD markers remain in the spec.
+
+Skaro validates DoD through the CLI:
+
+```bash
+skaro validate my-task-name
+```
+
+This checks phase-specific criteria and returns exit code 0 (pass) or 1 (fail), making it suitable for CI pipelines.

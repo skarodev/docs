@@ -1,0 +1,87 @@
+---
+title: "Supported Providers"
+description: "Overview of all LLM providers supported by Skaro."
+---
+
+Skaro supports four LLM providers out of the box. You can use one provider for everything, or mix them using [role-based routing](/providers/role-based-routing).
+
+## Provider Comparison
+
+| Provider | API Key Required | Default Model | Console URL |
+|---|---|---|---|
+| **Anthropic** | Yes | `claude-sonnet-4-6` | [console.anthropic.com](https://console.anthropic.com/settings/keys) |
+| **OpenAI** | Yes | `gpt-5.2` | [platform.openai.com](https://platform.openai.com/api-keys) |
+| **Groq** | Yes | `llama-3.3-70b-versatile` | [console.groq.com](https://console.groq.com/keys) |
+| **Ollama** | No | `qwen3:32b` | Local — [ollama.com](https://ollama.com) |
+
+## Available Models
+
+### Anthropic
+
+| Model | Context Window | Max Output |
+|---|---|---|
+| Claude Opus 4.6 (`claude-opus-4-6`) | 200K | 128K |
+| Claude Sonnet 4.6 (`claude-sonnet-4-6`) | 200K | 64K |
+| Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) | 200K | 64K |
+| Claude Haiku 4.5 (`claude-haiku-4-5-20251001`) | 200K | 64K |
+
+### OpenAI
+
+| Model | Context Window | Max Output |
+|---|---|---|
+| GPT-5.2 (`gpt-5.2`) | 256K | 128K |
+| GPT-5.1 (`gpt-5.1`) | 256K | 128K |
+| GPT-5 (`gpt-5`) | 256K | 65K |
+| GPT-5 Mini (`gpt-5-mini`) | 256K | 65K |
+| GPT-5.2 Codex (`gpt-5.2-codex`) | 256K | 128K |
+| GPT-4.1 (`gpt-4.1`) | 1M | 32K |
+| GPT-4.1 Mini (`gpt-4.1-mini`) | 1M | 32K |
+
+### Groq
+
+| Model | Context Window | Max Output |
+|---|---|---|
+| Llama 3.3 70B (`llama-3.3-70b-versatile`) | 131K | 32K |
+| Llama 3.1 8B Instant (`llama-3.1-8b-instant`) | 131K | 131K |
+| GPT-OSS 120B (`openai/gpt-oss-120b`) | 131K | 65K |
+| Llama 4 Scout 17B (`meta-llama/llama-4-scout-17b-16e-instruct`) | 131K | 8K |
+| Kimi K2 (`moonshotai/kimi-k2-instruct-0905`) | 262K | 16K |
+| Qwen3 32B (`qwen/qwen3-32b`) | 131K | 40K |
+
+### Ollama (Local)
+
+| Model | Context Window | Max Output |
+|---|---|---|
+| Qwen3 32B (`qwen3:32b`) | 131K | 40K |
+| Qwen 3.5 35B (`qwen3.5:35b`) | 131K | 40K |
+| Llama 3.3 70B (`llama3.3:70b`) | 131K | 32K |
+| DeepSeek R1 70B (`deepseek-r1:70b`) | 131K | 65K |
+| Gemma 3 27B (`gemma3:27b`) | 131K | 8K |
+| Phi-4 14B (`phi4:14b`) | 16K | 16K |
+| CodeLlama 34B (`codellama:34b`) | 16K | 16K |
+
+<Tip>
+  You can also enter any custom model ID during `skaro init` or via `skaro config --model your-model-id`. The lists above are suggestions, not hard limits.
+</Tip>
+
+## Choosing a Provider
+
+**Best quality** — Anthropic or OpenAI. Larger models produce better architecture reviews and more consistent code. Best for the `architect` role.
+
+**Fastest inference** — Groq. Hardware-accelerated inference makes it excellent for code generation. Good for the `coder` role.
+
+**Full privacy** — Ollama. Code never leaves your machine. No API costs. Trade-off: requires local hardware (16GB+ RAM for 30B+ models) and may produce lower quality output than cloud providers.
+
+**Cost-effective start** — Groq offers a generous free tier. Good for trying Skaro without spending money.
+
+## Quick Setup
+
+```bash
+# Pick one:
+skaro config --provider anthropic --api-key sk-ant-...
+skaro config --provider openai --api-key sk-...
+skaro config --provider groq --api-key gsk_...
+skaro config --provider ollama --model qwen3:32b
+```
+
+See [Role-Based Routing](/providers/role-based-routing) to use different providers for different phases.

@@ -1,0 +1,108 @@
+---
+title: "skaro config"
+description: "Configure LLM provider, model, and project settings."
+---
+
+`skaro config` manages your LLM provider settings and API keys. You can also view the current configuration.
+
+## Usage
+
+```bash
+skaro config [OPTIONS]
+```
+
+| Option | Description |
+|---|---|
+| `--provider` | LLM provider: `anthropic`, `openai`, `groq`, or `ollama` |
+| `--model TEXT` | Model name or ID |
+| `--api-key TEXT` | API key (saved securely to `.skaro/secrets.yaml`) |
+| `--show` | Display current configuration |
+
+If no options are passed, `--show` is implied.
+
+## Examples
+
+**Set up Groq with an API key:**
+
+```bash
+skaro config --provider groq --api-key gsk_your_key_here
+```
+
+**Switch to Ollama (no key needed):**
+
+```bash
+skaro config --provider ollama --model qwen3:32b
+```
+
+**Change only the model (keep current provider):**
+
+```bash
+skaro config --model claude-opus-4-6
+```
+
+**View current settings:**
+
+```bash
+skaro config --show
+```
+
+Output:
+
+```
+┌─────────────────┬──────────────────────────┐
+│ Key             │ Value                    │
+├─────────────────┼──────────────────────────┤
+│ LLM Provider    │ groq                     │
+│ Model           │ llama-3.3-70b-versatile  │
+│ API Key Env     │ GROQ_API_KEY             │
+│ API Key Resolved│ ✓                        │
+│ Language        │ en                       │
+└─────────────────┴──────────────────────────┘
+```
+
+## Provider Defaults
+
+When you set a provider without specifying a model, Skaro uses the provider's default:
+
+| Provider | Default Model |
+|---|---|
+| `anthropic` | `claude-sonnet-4-6` |
+| `openai` | `gpt-5.2` |
+| `groq` | `llama-3.3-70b-versatile` |
+| `ollama` | `qwen3:32b` |
+
+## Where Settings Are Stored
+
+**Configuration** is saved to `.skaro/config.yaml`:
+
+```yaml
+llm:
+  provider: groq
+  model: llama-3.3-70b-versatile
+  api_key_env: GROQ_API_KEY
+  max_tokens: 16384
+  temperature: 0.3
+lang: en
+theme: dark
+project_name: my-project
+```
+
+**API keys** are saved to `.skaro/secrets.yaml`, which is automatically added to `.gitignore` by `skaro init`. Never commit this file.
+
+## API Key Resolution
+
+Skaro resolves API keys in this order:
+
+1. **Environment variable** — the variable named in `api_key_env` (e.g., `GROQ_API_KEY`)
+2. **secrets.yaml** — `.skaro/secrets.yaml`
+3. **Provider preset** — the default env var for the provider (e.g., `ANTHROPIC_API_KEY` for Anthropic)
+
+If you prefer environment variables over `secrets.yaml`, just export the variable and Skaro will find it:
+
+```bash
+export GROQ_API_KEY=gsk_your_key_here
+```
+
+## Advanced Configuration
+
+For role-based routing, verify commands, import settings, and other advanced options, use the web dashboard or edit `.skaro/config.yaml` directly. See [Role-Based Routing](/providers/role-based-routing) and [Dashboard Configuration](/dashboard/configuration) for details.

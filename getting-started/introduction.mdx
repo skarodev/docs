@@ -1,0 +1,66 @@
+---
+title: "Introduction"
+description: "AI-powered SDLC orchestration platform. Developer is the architect, LLM is the amplifier."
+---
+
+Skaro is an AI-powered development toolkit that keeps your project context in files, not in chat history.
+
+When you use an LLM to help build software, context gets lost between sessions. Decisions made in one chat are forgotten in the next. Code style drifts. Stubs appear without warning. Skaro solves this by storing all specifications, plans, and architecture decisions as files inside your repository — in a `.skaro/` directory that lives next to your code and is version-controlled with Git.
+
+## Philosophy
+
+**Developer is the architect. LLM is the amplifier.**
+
+You make the decisions. The LLM helps you explore options, generate code, review for blind spots, and maintain consistency. Skaro provides the structure to make this collaboration repeatable and reliable.
+
+## What Skaro Does
+
+Skaro wraps your development workflow in a phase-based process where each phase produces a concrete artifact:
+
+- **Constitution** — your project's immutable principles: stack, standards, constraints, security rules
+- **Architecture** — component map, invariants, and Architecture Decision Records (ADRs)
+- **Clarify** — LLM-driven Q&A to find gaps in your specification before you start coding
+- **Plan** — decomposition into stages with dependencies and Definition of Done
+- **Implement** — stage-by-stage code generation with AI notes for each stage
+- **Review** — cross-validation of spec vs code vs architecture
+
+Every artifact is a Markdown file in `.skaro/`. Every LLM call receives the relevant files as context. You can switch LLM providers, start a new chat, or hand off to a teammate — the context is always in the repository.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="CLI + Web Dashboard" icon="terminal">
+    Bootstrap projects with `skaro init`, then run phases through a web dashboard at localhost:4700.
+  </Card>
+  <Card title="Multi-Provider LLM" icon="microchip">
+    Anthropic, OpenAI, Groq, or Ollama. Use different models for different roles (architect, coder, reviewer).
+  </Card>
+  <Card title="12 Constitution Presets" icon="layer-group">
+    Ready-made templates for React, Next.js, FastAPI, Django, Flutter, and more.
+  </Card>
+  <Card title="Existing Project Import" icon="download">
+    Run `skaro init` on an existing codebase — the LLM analyzes it and generates initial artifacts automatically.
+  </Card>
+</CardGroup>
+
+## How It Fits Your Workflow
+
+Skaro is not a code editor, IDE plugin, or CI system. It is a specification layer that sits between you and your LLM:
+
+1. You describe what to build (in specs and constitution)
+2. Skaro feeds the right context to the LLM at each phase
+3. The LLM produces artifacts and code
+4. You review, approve, and commit
+
+All of this is driven from either the CLI or the web dashboard — your choice.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/getting-started/installation">
+    Install Skaro via pip, pipx, or from source.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/getting-started/quickstart">
+    Go from zero to a working project in 2 minutes.
+  </Card>
+</CardGroup>

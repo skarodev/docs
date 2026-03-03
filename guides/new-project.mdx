@@ -1,0 +1,154 @@
+---
+title: "New Project from Scratch"
+description: "Step-by-step guide: from an empty directory to your first completed task."
+---
+
+This guide walks you through the full Skaro workflow for a brand new project — from initialization to completing your first feature.
+
+## Prerequisites
+
+- Skaro installed ([Installation](/getting-started/installation))
+- An LLM provider API key (or Ollama running locally)
+
+## Step 1: Initialize
+
+Create a project directory and initialize Skaro:
+
+```bash
+mkdir my-app && cd my-app
+git init
+skaro init --name my-app
+```
+
+Walk through the wizard: choose language, accept the license, confirm the project name. Since this is a new directory, Skaro creates the standard `.skaro/` structure.
+
+## Step 2: Configure LLM
+
+```bash
+skaro config --provider groq --api-key gsk_your_key_here
+```
+
+Verify it works:
+
+```bash
+skaro config --show
+```
+
+The "API Key Resolved" field should show `✓`.
+
+## Step 3: Write the Constitution
+
+Open `.skaro/constitution.md` in your editor (or use the dashboard). Replace the template with your actual project principles. At minimum, fill in these six sections:
+
+```markdown
+# Constitution: my-app
+
+## Stack
+- Language: TypeScript 5.4
+- Framework: Next.js 14
+- Database: PostgreSQL 16
+- Infrastructure: Docker, Vercel
+
+## Coding Standards
+- Linter: ESLint with next/core-web-vitals
+- Formatter: Prettier
+- Naming: camelCase for variables, PascalCase for components
+
+## Testing
+- Framework: Vitest + React Testing Library
+- Minimum coverage: 80%
+- Required: unit tests for business logic, integration tests for API routes
+
+## Constraints
+- Must work on Node.js 20 LTS
+- No paid third-party services beyond database hosting
+- Bundle size under 200KB for initial load
+
+## Security
+- Authentication: NextAuth.js with JWT
+- Input validation: Zod schemas on all API routes
+- Secrets: environment variables via .env.local
+
+## LLM Rules
+- No stubs or TODO without explicit justification
+- Always generate AI_NOTES.md per stage
+- Do not duplicate existing utility functions
+```
+
+Validate completeness:
+
+```bash
+skaro constitution validate
+```
+
+All six checks should show `✓`.
+
+## Step 4: Launch the Dashboard
+
+```bash
+skaro ui
+```
+
+From here, everything happens in the browser.
+
+## Step 5: Define Architecture
+
+In the dashboard, go to **Architecture** and describe your system:
+
+- Component overview (frontend, API, database)
+- Key data flows
+- Technology decisions and their rationale
+
+Then request an **Architecture Review** — the LLM will analyze your design and report risks. Review the findings, define invariants (rules that must always hold), and create ADRs for non-obvious decisions.
+
+## Step 6: Generate a Dev Plan
+
+Go to **Dev Plan** and generate a plan. The LLM reads your constitution and architecture, then proposes milestones and tasks. For example:
+
+```
+Milestone: MVP
+├── Task: Project scaffolding
+├── Task: Authentication flow
+├── Task: Database schema
+└── Task: Core API endpoints
+```
+
+Review and approve the plan. Tasks will appear in the **Tasks** section.
+
+## Step 7: Work on Your First Task
+
+Select a task and step through the phases:
+
+### Clarify
+The LLM reads your spec and asks clarifying questions: edge cases, missing requirements, contradictions with invariants. Answer each question — your responses are saved to `clarifications.md`.
+
+### Plan
+The LLM decomposes the task into implementation stages. Each stage has a goal, inputs/outputs, and Definition of Done. Review the plan for realism — no stage should take more than one working day.
+
+### Implement
+Stage by stage, the LLM generates code. For each stage:
+
+1. Review the generated files
+2. Apply them to your project
+3. Check that `AI_NOTES.md` accurately describes what was done and why
+
+### Tests
+Run your verification commands (configured in the dashboard settings). The LLM can also generate additional tests.
+
+### Review
+The LLM performs cross-validation: does the code match the spec? Are invariants preserved? Is the constitution respected? Issues are categorized as MUST FIX, SHOULD IMPROVE, or NICE TO HAVE.
+
+## Step 8: Commit
+
+Once review passes, commit everything to Git:
+
+```bash
+git add .
+git commit -m "feat: complete user-auth task via Skaro"
+```
+
+The `.skaro/` artifacts are committed alongside your code — the full context is preserved for future tasks.
+
+## Repeat
+
+Pick the next task and repeat steps 7–8. Each task builds on the context from previous ones. The constitution, architecture, and invariants guide every LLM call, keeping your project consistent as it grows.

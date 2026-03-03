@@ -1,0 +1,110 @@
+---
+title: ".skaro/ Directory"
+description: "Complete map of the .skaro/ directory and all artifact files."
+---
+
+The `.skaro/` directory is the heart of every Skaro project. It contains all artifacts, configuration, and state. Everything here is Markdown or YAML — human-readable and Git-friendly.
+
+## Directory Layout
+
+```
+.skaro/
+├── constitution.md                # Project principles and constraints
+├── config.yaml                    # LLM and project settings
+├── secrets.yaml                   # API keys (⚠ in .gitignore)
+├── state.yaml                     # Phase states, hashes, approval flags
+├── token_usage.yaml               # Token consumption tracking (in .gitignore)
+├── usage_log.jsonl                # Detailed usage log (in .gitignore)
+│
+├── architecture/
+│   ├── architecture.md            # System architecture document
+│   ├── review.md                  # LLM architecture review results
+│   ├── invariants.md              # Rules that must always hold
+│   ├── diagrams/                  # Mermaid / PlantUML diagrams
+│   └── adr-NNN-*.md              # Architecture Decision Records
+│
+├── devplan/
+│   └── devplan.md                 # Project development plan
+│
+├── milestones/
+│   └── <milestone-name>/
+│       └── <task-name>/
+│           ├── spec.md            # Task specification
+│           ├── clarifications.md  # Clarify phase Q&A
+│           ├── plan.md            # Implementation plan
+│           ├── tasks.md           # Task decomposition
+│           └── stages/
+│               ├── stage-01/
+│               │   └── AI_NOTES.md
+│               ├── stage-02/
+│               │   └── AI_NOTES.md
+│               └── ...
+│
+├── docs/
+│   └── review-log.md             # Cross-validation log
+│
+├── ops/
+│   ├── devops-notes.md
+│   └── security-review.md
+│
+└── templates/                     # Artifact templates
+    ├── constitution-template.md
+    ├── architecture-template.md
+    ├── spec-template.md
+    ├── plan-template.md
+    ├── devplan-template.md
+    ├── ai-notes-template.md
+    ├── adr-template.md
+    └── security-checklist.md
+```
+
+## File Descriptions
+
+### Project-Level Files
+
+| File | Purpose | Who Creates It |
+|---|---|---|
+| `constitution.md` | Immutable project principles | Developer (or LLM during import) |
+| `config.yaml` | Provider, model, roles, UI settings | `skaro config` or dashboard |
+| `secrets.yaml` | API keys | `skaro config` (auto-gitignored) |
+| `state.yaml` | Phase statuses, content hashes, approvals | Managed by Skaro automatically |
+
+### Architecture Directory
+
+| File | Purpose |
+|---|---|
+| `architecture.md` | System architecture: components, data flows, tech decisions |
+| `review.md` | Results of LLM architecture review (risks by severity) |
+| `invariants.md` | Architectural rules that must never be violated |
+| `adr-NNN-*.md` | Individual Architecture Decision Records |
+
+### Task Files (per milestone/task)
+
+| File | Created During |
+|---|---|
+| `spec.md` | Task creation — describes what to build |
+| `clarifications.md` | Clarify phase — LLM questions + developer answers |
+| `plan.md` | Plan phase — stages with goals, inputs, outputs, DoD |
+| `tasks.md` | Plan phase — granular task decomposition |
+| `stages/stage-NN/AI_NOTES.md` | Implement phase — what was done, why, risks, how to verify |
+
+## What to Commit
+
+Add `.skaro/` to Git — **except** files that are auto-gitignored by `skaro init`:
+
+| File | Commit? | Why |
+|---|---|---|
+| `constitution.md` | ✅ | Core project artifact |
+| `config.yaml` | ✅ | Shared settings (no secrets) |
+| `secrets.yaml` | ❌ | Contains API keys |
+| `token_usage.yaml` | ❌ | Local tracking data |
+| `usage_log.jsonl` | ❌ | Local tracking data |
+| `state.yaml` | ✅ | Phase progress |
+| Everything else | ✅ | Project artifacts |
+
+## Root-Level Files
+
+`skaro init` also creates two files in the project root (not inside `.skaro/`):
+
+- **`.skaroignore`** — controls which files are excluded from LLM analysis (gitignore syntax)
+- **`.gitignore` additions** — Skaro appends a marked section for secrets and usage logs

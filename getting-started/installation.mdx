@@ -1,0 +1,78 @@
+---
+title: "Installation"
+description: "Install Skaro on Linux, macOS, or Windows. Python 3.11+ required."
+---
+
+## Requirements
+
+- **Python 3.11** or later
+- **Git** (recommended — Skaro detects `.git` and tracks commits)
+- **Node.js 18+** (only if building the frontend from source)
+
+## Install
+
+<Tabs>
+  <Tab title="Linux / macOS">
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/skarodev/skaro/main/install.sh | sh
+    ```
+  </Tab>
+  <Tab title="Windows (PowerShell)">
+    ```powershell
+    irm https://raw.githubusercontent.com/skarodev/skaro/main/install.ps1 | iex
+    ```
+  </Tab>
+  <Tab title="pipx">
+    ```bash
+    pipx install skaro
+    ```
+  </Tab>
+  <Tab title="uv">
+    ```bash
+    uv tool install skaro
+    ```
+  </Tab>
+</Tabs>
+
+## From Source
+
+For development or contributing:
+
+```bash
+git clone https://github.com/skarodev/skaro.git
+cd skaro
+python3 -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+```
+
+To build the web dashboard frontend (optional — a pre-built version is bundled in releases):
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+## Verify
+
+```bash
+skaro --version
+```
+
+You should see output like `skaro, version 0.1.11`.
+
+## What Gets Installed
+
+The `skaro` package includes everything in one install:
+
+- **skaro_cli** — the `skaro` command-line tool
+- **skaro_core** — artifact manager, LLM adapters, phase engine, templates
+- **skaro_web** — FastAPI web dashboard with SvelteKit frontend
+
+Dependencies include `click`, `rich`, `fastapi`, `uvicorn`, `anthropic`, `openai`, `httpx`, `gitpython`, and `jinja2`. See the full list in [pyproject.toml](https://github.com/skarodev/skaro/blob/main/pyproject.toml).
+
+## Next Steps
+
+<Card title="Quickstart" icon="rocket" href="/getting-started/quickstart">
+  Initialize your first project and launch the dashboard.
+</Card>

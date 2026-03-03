@@ -1,0 +1,98 @@
+---
+title: "Quickstart"
+description: "Go from zero to a working Skaro project in under 2 minutes."
+---
+
+This guide walks you through initializing a new project, configuring an LLM provider, and launching the web dashboard.
+
+## 1. Initialize
+
+Navigate to your project directory (or create a new one) and run:
+
+```bash
+cd my-project
+skaro init
+```
+
+The init wizard will ask you to:
+
+1. **Choose a language** — English or Russian (affects UI and prompts)
+2. **Accept the license** — AGPL-3.0
+3. **Enter the project name** — defaults to the current directory name
+
+After this, Skaro creates a `.skaro/` directory with starter templates:
+
+```
+.skaro/
+├── constitution.md              # Your project principles (fill this in)
+├── architecture/
+│   └── architecture.md          # Architecture document (fill this in)
+├── config.yaml                  # LLM and project settings
+├── templates/                   # Bundled templates for all artifacts
+└── ...
+```
+
+It also creates a `.skaroignore` file in the project root (similar to `.gitignore`) that controls which files are excluded from LLM analysis.
+
+<Note>
+  If Skaro detects an existing project (a `.git` directory or 3+ source files), it will offer two options: **A)** fill artifacts manually, or **B)** analyze the repository with an LLM automatically. See the [Import Existing Project](/guides/existing-project) guide for details.
+</Note>
+
+## 2. Configure LLM
+
+Skaro needs an LLM provider to power its phases. The fastest way to get started is with [Groq](https://console.groq.com/keys) (free tier available):
+
+```bash
+skaro config --provider groq --api-key gsk_your_key_here
+```
+
+This saves your provider and model to `.skaro/config.yaml` and the API key to `.skaro/secrets.yaml` (which is automatically added to `.gitignore`).
+
+Other providers work the same way:
+
+```bash
+# Anthropic
+skaro config --provider anthropic --api-key sk-ant-...
+
+# OpenAI
+skaro config --provider openai --api-key sk-...
+
+# Ollama (local, no key needed)
+skaro config --provider ollama --model qwen3:32b
+```
+
+Verify your config:
+
+```bash
+skaro config --show
+```
+
+## 3. Launch the Dashboard
+
+```bash
+skaro ui
+```
+
+This starts the web dashboard at [http://localhost:4700](http://localhost:4700) and opens your browser automatically. The dashboard is where you run all development phases: edit the constitution, review architecture, create tasks, and step through clarify → plan → implement → review.
+
+<Tip>
+  Use `--port 8080` to specify a custom port, or `--no-browser` to prevent the browser from opening automatically.
+</Tip>
+
+## 4. What's Next
+
+From the dashboard you can:
+
+- **Edit the constitution** — fill in your stack, coding standards, testing requirements, and security policies
+- **Define architecture** — describe your system and get an LLM-powered review
+- **Generate a dev plan** — the LLM creates milestones and tasks from your constitution and architecture
+- **Work on tasks** — each task goes through Clarify → Plan → Implement → Review
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="book" href="/getting-started/core-concepts">
+    Understand phases, artifacts, roles, and Definition of Done.
+  </Card>
+  <Card title="New Project Guide" icon="map" href="/guides/new-project">
+    Step-by-step walkthrough from init to your first completed task.
+  </Card>
+</CardGroup>

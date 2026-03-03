@@ -1,0 +1,77 @@
+---
+title: "Dashboard Overview"
+description: "Tour of the Skaro web dashboard — where all development phases are executed."
+---
+
+The Skaro dashboard is a web interface for running all development phases. While the CLI handles project setup and CI checks, the dashboard is where you do the actual work: editing artifacts, running LLM-powered phases, managing tasks, and tracking progress.
+
+## Launching
+
+```bash
+skaro ui
+```
+
+Opens [http://localhost:4700](http://localhost:4700) in your browser. The dashboard auto-selects a free port starting from 4700.
+
+| Option | Description |
+|---|---|
+| `--port 8080` | Use a specific port |
+| `--no-browser` | Don't open the browser automatically |
+
+## Dashboard Sections
+
+### Constitution
+
+Edit your project's constitution directly in the browser. The editor validates required sections in real time (Stack, Coding Standards, Testing, Constraints, Security, LLM Rules) and highlights anything missing.
+
+See [Constitution Editor](/dashboard/constitution) for details.
+
+### Architecture
+
+Manage your architecture document, invariants, and ADRs. Request an LLM-powered architecture review that evaluates your design for risks across categories like scalability, consistency, observability, and fault tolerance. Results are categorized by severity: CRITICAL, HIGH, MEDIUM, LOW.
+
+See [Architecture](/dashboard/architecture) for details.
+
+### Dev Plan
+
+Generate a project development plan from your constitution and architecture. The LLM creates milestones with tasks, forming a roadmap you can review, edit, and approve. Once approved, tasks become available for phase execution.
+
+See [Dev Plan](/dashboard/devplan) for details.
+
+### Tasks
+
+The main workspace. Each task shows its current phase and progress. Select a task to step through:
+
+1. **Clarify** — the LLM asks questions about your spec; you answer interactively
+2. **Plan** — the LLM decomposes the task into implementation stages
+3. **Implement** — stage-by-stage code generation with file application
+4. **Tests** — run verification commands, review results
+5. **Review** — cross-validation of spec vs code vs architecture
+
+Each phase shows its output and allows you to review before moving forward.
+
+See [Tasks & Milestones](/dashboard/tasks) for details.
+
+### Import Project
+
+If you initialized with `skaro init` on an existing project (Option B), the import analysis results appear here. You can also trigger a re-analysis from the dashboard.
+
+See [Import Existing Project](/dashboard/import-project) for details.
+
+### Configuration
+
+Manage all settings from the dashboard instead of the CLI:
+
+- LLM provider and model
+- Role-based routing (architect / coder / reviewer)
+- API keys
+- Verify commands (custom commands to run during Tests phase)
+- Language and UI preferences
+
+See [Configuration](/dashboard/configuration) for details.
+
+## Technical Details
+
+The dashboard runs on FastAPI (backend) with a SvelteKit frontend. Communication between the browser and server uses both REST API calls and a WebSocket connection (`/ws`) for real-time streaming during LLM phases.
+
+The backend serves from the same process as the API — no separate frontend server is needed. Everything is included in the `skaro` package.
