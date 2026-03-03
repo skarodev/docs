@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "theme": "skaro",
+  "name": "Skaro Starter Kit",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#589df6",
+    "light": "#f2f2f2",
+    "dark": "#262626"
   },
   "favicon": "/favicon.svg",
   "navigation": {
