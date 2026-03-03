@@ -1,97 +1,51 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Skaro Documentation"
+description: "AI-powered SDLC orchestration platform. Developer is the architect, LLM is the amplifier."
 ---
 
-## Setting up
+## Get Started
 
-Get your documentation site up and running in minutes.
+Everything you need to set up Skaro and start building with AI-assisted development.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Introduction" icon="book" href="/getting-started/introduction">
+    What Skaro is, how it works, and why specifications belong in the repository.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Installation" icon="download" href="/getting-started/installation">
+    Install via pip, pipx, uv, or from source. Python 3.11+ required.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Quickstart" icon="rocket" href="/getting-started/quickstart">
+    Initialize a project, configure an LLM, and launch the dashboard in 2 minutes.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Core Concepts" icon="lightbulb" href="/getting-started/core-concepts">
+    Phases, constitution, artifacts, roles, milestones, and Definition of Done.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## Configure & Use
 
-Everything you need to create world-class documentation.
+<CardGroup cols={2}>
+  <Card title="skaro init" icon="terminal" href="/cli/init">
+    Initialize Skaro in a new or existing project. Two paths: manual or LLM-powered.
+  </Card>
+  <Card title="skaro config" icon="gear" href="/cli/config">
+    Set up your LLM provider, model, and API key.
+  </Card>
+  <Card title="Web Dashboard" icon="browser" href="/dashboard/overview">
+    Tour of the dashboard where all development phases are executed.
+  </Card>
+  <Card title="LLM Providers" icon="microchip" href="/providers/supported-providers">
+    Anthropic, OpenAI, Groq, and Ollama — models, setup, and comparison.
+  </Card>
+</CardGroup>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Go Deeper
 
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<CardGroup cols={2}>
+  <Card title=".skaro/ Directory" icon="folder-tree" href="/project-structure/skaro-directory">
+    Complete map of all artifact files and what to commit to Git.
+  </Card>
+  <Card title="New Project Guide" icon="map" href="/guides/new-project">
+    Step-by-step walkthrough from an empty directory to your first completed task.
+  </Card>
+</CardGroup>

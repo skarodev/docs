@@ -22,7 +22,8 @@ Skaro wraps your development workflow in a phase-based process where each phase 
 - **Clarify** — LLM-driven Q&A to find gaps in your specification before you start coding
 - **Plan** — decomposition into stages with dependencies and Definition of Done
 - **Implement** — stage-by-stage code generation with AI notes for each stage
-- **Review** — cross-validation of spec vs code vs architecture
+- **Tests** — verification commands and LLM-assisted test generation
+- **Project Review** — cross-validation of spec vs code vs architecture (project-wide)
 
 Every artifact is a Markdown file in `.skaro/`. Every LLM call receives the relevant files as context. You can switch LLM providers, start a new chat, or hand off to a teammate — the context is always in the repository.
 

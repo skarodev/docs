@@ -133,14 +133,13 @@ Stage by stage, the LLM generates code. For each stage:
 3. Check that `AI_NOTES.md` accurately describes what was done and why
 
 ### Tests
-Run your verification commands (configured in the dashboard settings). The LLM can also generate additional tests.
+Run your verification commands (configured in the dashboard settings). The LLM can also generate additional tests. If issues are found, use the fix chat to address them iteratively.
 
-### Review
-The LLM performs cross-validation: does the code match the spec? Are invariants preserved? Is the constitution respected? Issues are categorized as MUST FIX, SHOULD IMPROVE, or NICE TO HAVE.
+This completes the task pipeline. When all tasks in a milestone are done, you can run a **Project Review** from the dashboard to cross-validate the entire codebase against the spec, architecture, and constitution.
 
 ## Step 8: Commit
 
-Once review passes, commit everything to Git:
+Once tests pass, commit everything to Git:
 
 ```bash
 git add .

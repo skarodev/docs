@@ -23,9 +23,10 @@ Every task in Skaro goes through a sequence of phases. Each phase has defined in
 | **Plan** | LLM decomposes the task into stages | `plan.md`, `tasks.md` |
 | **Implement** | LLM generates code stage by stage | Code files + `AI_NOTES.md` per stage |
 | **Tests** | Run verification commands, generate tests | Test results |
-| **Review** | Cross-validate spec ↔ code ↔ architecture | Review findings |
 
-Constitution and Architecture are set up once per project. The remaining phases run per task.
+Constitution and Architecture are set up once per project. Clarify → Plan → Implement → Tests is the per-task pipeline.
+
+There is also a **Project Review** that runs separately — it cross-validates the entire codebase against the spec, architecture, and constitution. This is not part of the task pipeline but is triggered from a dedicated dashboard section.
 
 <Note>
   Phases are sequential — you cannot skip Clarify and jump to Implement. Each phase builds on the output of the previous one.

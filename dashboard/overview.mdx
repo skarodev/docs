@@ -45,12 +45,17 @@ The main workspace. Each task shows its current phase and progress. Select a tas
 1. **Clarify** — the LLM asks questions about your spec; you answer interactively
 2. **Plan** — the LLM decomposes the task into implementation stages
 3. **Implement** — stage-by-stage code generation with file application
-4. **Tests** — run verification commands, review results
-5. **Review** — cross-validation of spec vs code vs architecture
+4. **Tests** — run verification commands, LLM-assisted test generation and fix suggestions
 
 Each phase shows its output and allows you to review before moving forward.
 
 See [Tasks & Milestones](/dashboard/tasks) for details.
+
+### Project Review
+
+Separate from the task pipeline. Project Review runs across the entire codebase — cross-validates spec vs code vs architecture, runs project-wide tests, and provides a fix chat for addressing findings. This is triggered from a dedicated section in the dashboard, not from within a task.
+
+See [Review](/dashboard/review) for details.
 
 ### Import Project
 
