@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "skaro",
+  "theme": "mint",
   "name": "Skaro Starter Kit",
   "colors": {
     "primary": "#589df6",
