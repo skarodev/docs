@@ -1,0 +1,115 @@
+---
+title: "skaro update"
+description: "How to check for new versions and update Skaro to the latest release."
+icon: "arrow-up-circle"
+---
+
+## Check for updates
+
+Run the following command from any directory:
+
+```bash
+skaro update
+```
+
+Skaro will compare your installed version against the latest release on PyPI and show upgrade instructions tailored to your installation method.
+
+<Tip>
+  Results are cached for 24 hours. Use `--force` to bypass the cache and check immediately.
+</Tip>
+
+```bash
+skaro update --force
+```
+
+## Update instructions
+
+The update command depends on how you originally installed Skaro.
+
+<Tabs>
+  <Tab title="Install script (venv)">
+    If you installed Skaro using `install.ps1` (Windows) or `install.sh` (macOS/Linux), it lives in a dedicated virtual environment at `~/.skaro/venv`.
+
+    <Steps>
+      <Step title="Run the upgrade">
+        <CodeGroup>
+          ```powershell Windows
+          & "$env:USERPROFILE\.skaro\venv\Scripts\pip.exe" install --upgrade skaro
+          ```
+
+          ```bash macOS / Linux
+          ~/.skaro/venv/bin/pip install --upgrade skaro
+          ```
+        </CodeGroup>
+      </Step>
+      <Step title="Verify">
+        ```bash
+        skaro --version
+        ```
+      </Step>
+    </Steps>
+
+    <Note>
+      You can also re-run the install script — it detects the existing venv and upgrades in place.
+    </Note>
+
+    <CodeGroup>
+      ```powershell Windows
+      irm https://raw.githubusercontent.com/skarodev/skaro/main/install.ps1 | iex
+      ```
+
+      ```bash macOS / Linux
+      curl -fsSL https://raw.githubusercontent.com/skarodev/skaro/main/install.sh | bash
+      ```
+    </CodeGroup>
+  </Tab>
+
+  <Tab title="pipx">
+    If you installed Skaro with `pipx`:
+
+    <Steps>
+      <Step title="Run the upgrade">
+        ```bash
+        pipx upgrade skaro
+        ```
+      </Step>
+      <Step title="Verify">
+        ```bash
+        skaro --version
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## UI notification
+
+When a newer version is available, the Skaro web dashboard displays an update indicator in the status bar at the bottom of the screen. Clicking it opens this page.
+
+The dashboard checks PyPI once when it starts and caches the result for 24 hours.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="skaro update shows 'Could not reach PyPI'">
+    Your machine may not have internet access, or PyPI could be temporarily unavailable. Check your connection and try again with `skaro update --force`.
+  </Accordion>
+
+  <Accordion title="Install method shows 'unknown'">
+    Skaro could not detect whether it was installed via the install script or pipx. This typically happens with custom `pip install` setups. Use the appropriate command from the tabs above based on how you installed it.
+  </Accordion>
+
+  <Accordion title="Version did not change after upgrade">
+    Make sure you are upgrading the correct environment. If you have multiple Python installations, verify which `skaro` binary is being used:
+
+    <CodeGroup>
+      ```powershell Windows
+      Get-Command skaro | Select-Object Source
+      ```
+
+      ```bash macOS / Linux
+      which skaro
+      ```
+    </CodeGroup>
+  </Accordion>
+</AccordionGroup>

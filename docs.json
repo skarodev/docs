@@ -41,7 +41,7 @@
             "pages": [
               "cli/init",
               "cli/config",
-              "cli/skaro-update"
+              "cli/update"
             ]
           },
           {
