@@ -12,10 +12,21 @@ The process depends on how you originally installed Skaro.
     The install script creates a virtual environment and a shim in `~/.skaro/`. Removing these two directories is enough.
 
     <Steps>
+      <Step title="Stop running processes">
+        <CodeGroup>
+          ```powershell Windows
+          Get-Process -Name skaro, python -ErrorAction SilentlyContinue | Stop-Process -Force
+          ```
+
+          ```bash macOS / Linux
+          pkill -f skaro || true
+          ```
+        </CodeGroup>
+      </Step>
       <Step title="Remove the venv and CLI shim">
         <CodeGroup>
           ```powershell Windows
-          Remove-Item -Recurse -Force "$env:USERPROFILE\.skaro\venv", "$env:USERPROFILE\.skaro\bin\skaro.cmd"
+          Remove-Item -Recurse -Force "$env:USERPROFILE\.skaro\venv", "$env:USERPROFILE\.skaro\bin"
           ```
 
           ```bash macOS / Linux
@@ -28,9 +39,10 @@ The process depends on how you originally installed Skaro.
 
         <CodeGroup>
           ```powershell Windows
-          # Open System Environment Variables
-          rundll32 sysdm.cpl,EditEnvironmentVariables
-          # Remove the ~/.skaro/bin entry from the user Path variable
+          $binDir = Join-Path $env:USERPROFILE '.skaro\bin'
+          $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+          $newPath = ($userPath -split ';' | Where-Object { $_ -ne $binDir }) -join ';'
+          [Environment]::SetEnvironmentVariable('Path', $newPath, 'User')
           ```
 
           ```bash macOS / Linux
