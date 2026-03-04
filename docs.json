@@ -22,54 +22,10 @@
         }
       ]
     },
-    "tabs": [
+    "anchors": [
       {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "index",
-              "getting-started/introduction",
-              "getting-started/installation",
-              "getting-started/quickstart",
-              "getting-started/core-concepts"
-            ]
-          },
-          {
-            "group": "CLI Reference",
-            "pages": [
-              "cli/init",
-              "cli/config",
-              "cli/update"
-            ]
-          },
-          {
-            "group": "Web Dashboard",
-            "pages": [
-              "dashboard/overview"
-            ]
-          },
-          {
-            "group": "LLM Providers",
-            "pages": [
-              "providers/supported-providers"
-            ]
-          },
-          {
-            "group": "Project Structure",
-            "pages": [
-              "project-structure/skaro-directory"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "guides/new-project",
-              "guides/uninstall"
-            ]
-          }
-        ]
+        "anchor": "PyPi",
+        "href": "https://pypi.org/project/skaro/"
       }
     ]
   },
