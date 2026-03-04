@@ -65,7 +65,8 @@
           {
             "group": "Guides",
             "pages": [
-              "guides/new-project"
+              "guides/new-project",
+              "guides/uninstall"
             ]
           }
         ]

@@ -1,0 +1,98 @@
+---
+title: "Uninstalling Skaro"
+description: "How to completely remove Skaro from your system."
+icon: "trash-2"
+---
+
+## Uninstall steps
+
+The process depends on how you originally installed Skaro.
+
+<Tabs>
+  <Tab title="Install script (venv)">
+    The install script creates a virtual environment and a shim in `~/.skaro/`. Removing these two directories is enough.
+
+    <Steps>
+      <Step title="Remove the venv and CLI shim">
+        <CodeGroup>
+          ```powershell Windows
+          Remove-Item -Recurse -Force "$env:USERPROFILE\.skaro\venv", "$env:USERPROFILE\.skaro\bin\skaro.cmd"
+          ```
+
+          ```bash macOS / Linux
+          rm -rf ~/.skaro/venv ~/.local/bin/skaro
+          ```
+        </CodeGroup>
+      </Step>
+      <Step title="(Optional) Remove the PATH entry">
+        The installer added `~/.skaro/bin` to your user PATH. You can remove it manually:
+
+        <CodeGroup>
+          ```powershell Windows
+          # Open System Environment Variables
+          rundll32 sysdm.cpl,EditEnvironmentVariables
+          # Remove the ~/.skaro/bin entry from the user Path variable
+          ```
+
+          ```bash macOS / Linux
+          # Remove the line that adds ~/.skaro/bin to PATH
+          # from your shell profile (~/.bashrc, ~/.zshrc, etc.)
+          ```
+        </CodeGroup>
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="pipx">
+    <Steps>
+      <Step title="Uninstall the package">
+        ```bash
+        pipx uninstall skaro
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Remove project data
+
+Skaro stores per-project data in a `.skaro/` directory inside each project where you ran `skaro init`. To clean up:
+
+```bash
+# From the project root
+rm -rf .skaro
+```
+
+On Windows:
+
+```powershell
+Remove-Item -Recurse -Force .skaro
+```
+
+<Warning>
+  This permanently deletes all Skaro artifacts for the project — constitution, architecture, dev plan, task history, and token usage logs.
+</Warning>
+
+## Remove global config
+
+Skaro may store a cached update check and global settings in `~/.skaro/`. If you want a full cleanup and no longer need any Skaro data:
+
+<CodeGroup>
+  ```powershell Windows
+  Remove-Item -Recurse -Force "$env:USERPROFILE\.skaro"
+  ```
+
+  ```bash macOS / Linux
+  rm -rf ~/.skaro
+  ```
+</CodeGroup>
+
+## Verify
+
+Confirm that Skaro is no longer accessible:
+
+```bash
+skaro --version
+```
+
+You should see a "command not found" error. If the command still resolves, restart your terminal so that PATH changes take effect.
