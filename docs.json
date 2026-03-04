@@ -69,11 +69,6 @@
           "anchor": "GitHub",
           "icon": "github",
           "href": "https://github.com/skarodev/skaro"
-        },
-        {
-          "anchor": "PyPi",
-          "icon": "pypi",
-          "href": "https://pypi.org/project/skaro/"
         }
       ]
     }
