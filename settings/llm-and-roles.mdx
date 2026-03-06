@@ -1,0 +1,178 @@
+---
+title: "LLM & Roles"
+description: "Configure the default LLM provider, model parameters, and per-role overrides in config.yaml."
+---
+
+All LLM and role settings are stored in `.skaro/config.yaml` inside your project. This page explains every available option and how roles interact with the default configuration.
+
+## Default LLM Settings
+
+The `llm` section defines the provider and model used for all phases unless overridden by a role.
+
+```yaml
+llm:
+  provider: anthropic
+  model: claude-sonnet-4-6
+  api_key_env: ANTHROPIC_API_KEY
+  base_url: null
+  max_tokens: 16384
+  temperature: 0.3
+```
+
+### Field Reference
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `provider` | string | `anthropic` | LLM provider: `anthropic`, `openai`, `groq`, or `ollama` |
+| `model` | string | `claude-sonnet-4-6` | Model ID. Any string is accepted — use a value from [Supported Providers](/providers/supported-providers) or enter a custom model ID |
+| `api_key_env` | string | `""` | Name of the environment variable mapped to the API key in `secrets.yaml`. If empty, Skaro uses the provider's default (e.g., `ANTHROPIC_API_KEY` for Anthropic) |
+| `base_url` | string \| null | `null` | Custom API endpoint. Required only for self-hosted or proxy setups. Ollama defaults to `http://localhost:11434/v1` |
+| `max_tokens` | integer | `16384` | Maximum tokens in the LLM response |
+| `temperature` | float | `0.3` | Sampling temperature. Lower values produce more deterministic output |
+
+<Note>
+  The `api_key_env` field stores the **name** of a key in `secrets.yaml`, not the key value itself. Actual API keys are managed separately — see [API Keys](#api-keys) below.
+</Note>
+
+## Roles
+
+Skaro divides LLM work into three roles. Each role covers a specific set of phases:
+
+| Role | Phases | Purpose |
+|---|---|---|
+| `architect` | architecture, devplan, plan, import_analyze | Strategic decisions, planning, project analysis |
+| `coder` | implement, fix | Code generation and bug fixes |
+| `reviewer` | tests, clarify | Validation, test generation, question generation |
+
+By default, all roles use the settings from the `llm` section. To override a role, add it to the `roles` section with at least `provider` and `model` specified.
+
+### Minimal Role Override
+
+```yaml
+roles:
+  architect:
+    provider: anthropic
+    model: claude-opus-4-6
+  coder: null
+  reviewer: null
+```
+
+Here the `architect` role uses Claude Opus 4.6 while `coder` and `reviewer` fall back to the default `llm` section. Setting a role to `null` (or omitting it) means "use default."
+
+### Full Role Override
+
+Each role accepts the same fields as the `llm` section:
+
+```yaml
+roles:
+  architect:
+    provider: anthropic
+    model: claude-opus-4-6
+    api_key_env: ANTHROPIC_API_KEY
+    base_url: null
+    max_tokens: 16384
+    temperature: 0.3
+  coder:
+    provider: groq
+    model: llama-3.3-70b-versatile
+    api_key_env: GROQ_API_KEY
+    base_url: null
+    max_tokens: 16384
+    temperature: 0.3
+  reviewer:
+    provider: ollama
+    model: qwen3:32b
+    api_key_env: ""
+    base_url: null
+    max_tokens: 16384
+    temperature: 0.3
+```
+
+### How Fallback Works
+
+When Skaro resolves the LLM config for a phase:
+
+1. Determine which **role** covers the phase (e.g., `implement` → `coder`)
+2. If the role has both `provider` and `model` set, use the role config
+3. If the role's `api_key_env` is empty and the role's provider matches the default provider, inherit `api_key_env` from the default `llm` section
+4. The same inheritance applies to `base_url`
+5. If `max_tokens` or `temperature` are not set on the role, inherit them from the default `llm` section
+6. If the role is `null` or has no `provider`/`model`, use the default `llm` section entirely
+
+<Tip>
+  You can set an API key once in `secrets.yaml` under the provider's default env name and it will be shared with any role that uses the same provider — no need to configure it per role.
+</Tip>
+
+## API Keys
+
+API keys are stored in `.skaro/secrets.yaml`, which is automatically added to `.gitignore` by `skaro init`.
+
+The quickest way to save a key is through the CLI:
+
+```bash
+skaro config --provider groq --api-key gsk_your_key_here
+```
+
+This writes the key to `secrets.yaml` under the provider's default env var name (e.g., `GROQ_API_KEY`). You can also edit `secrets.yaml` directly:
+
+```yaml
+api_keys:
+  ANTHROPIC_API_KEY: sk-ant-...
+  GROQ_API_KEY: gsk_...
+```
+
+Ollama does not require an API key.
+
+<Warning>
+  Never commit `secrets.yaml` to version control.
+</Warning>
+
+## Complete Example
+
+A full `config.yaml` using Anthropic for architecture, Groq for coding, and Ollama for reviews:
+
+```yaml
+llm:
+  provider: anthropic
+  model: claude-sonnet-4-6
+  api_key_env: ANTHROPIC_API_KEY
+  base_url: null
+  max_tokens: 16384
+  temperature: 0.3
+
+roles:
+  architect:
+    provider: anthropic
+    model: claude-opus-4-6
+  coder:
+    provider: groq
+    model: llama-3.3-70b-versatile
+    api_key_env: GROQ_API_KEY
+  reviewer:
+    provider: ollama
+    model: qwen3:32b
+
+ui:
+  auto_open_browser: true
+
+lang: en
+theme: dark
+project_name: my-project
+project_description: "A short description of the project"
+```
+
+## How to Change Settings
+
+**Edit `config.yaml`** — open `.skaro/config.yaml` in any text editor. This is the only way to configure roles, `max_tokens`, `temperature`, and `base_url`. Changes take effect on the next Skaro command or dashboard refresh.
+
+**CLI** — `skaro config` can set the default provider, model, and API key:
+
+```bash
+skaro config --provider groq --model llama-3.3-70b-versatile
+skaro config --api-key gsk_your_key_here
+skaro config --show
+```
+
+The CLI does not support role overrides or advanced parameters.
+
+**Web dashboard** — the Settings page provides a visual interface for all options including roles.
