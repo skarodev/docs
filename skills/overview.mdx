@@ -1,0 +1,146 @@
+---
+title: "Skills"
+description: "LLM instruction packs that enhance code generation for your stack."
+---
+
+Skills are YAML files with additional instructions that Skaro injects into LLM prompts during phase execution. They teach the LLM framework-specific patterns, testing conventions, and architectural rules — beyond what the constitution covers.
+
+The constitution defines **what** your project uses (stack, standards, constraints). Skills define **how** the LLM should write code for that stack.
+
+## How Skills Work
+
+When a phase runs, Skaro builds a system prompt for the LLM. Skills are injected between the constitution and architectural invariants:
+
+```
+LANGUAGE → ENVIRONMENT → CONSTITUTION → SKILLS → INVARIANTS → ADR INDEX
+```
+
+Each skill is filtered by the current **phase** and **role** before injection. A skill that targets `implement` + `coder` won't appear in the `tests` phase run by the `reviewer` role.
+
+## Skill Sources
+
+Skills come from three places, in priority order (last wins on name conflicts):
+
+| Source | Location | Description |
+|---|---|---|
+| **Bundled** | `templates/skills/` (inside the package) | 28 skills shipped with Skaro, covering all 12 constitution presets |
+| **Global** | `~/.skaro/skills/` | Your personal skills, shared across all projects |
+| **Project** | `.skaro/skills/` | Skills specific to one project |
+
+If a global skill and a bundled skill have the same name, the global one wins. Project skills override everything.
+
+## Activation
+
+A skill must be explicitly activated to take effect. There are two ways:
+
+### Preset Activation
+
+When you select a constitution preset (e.g., React, FastAPI), Skaro automatically activates the skills linked to that preset. The mapping is defined in `templates/skills/_registry.yaml`.
+
+For example, selecting the **React** preset activates:
+- `typescript-strict` — strict TypeScript practices
+- `react-components` — component design patterns
+- `react-testing` — testing with Vitest + Testing Library
+- `react-state` — state management patterns
+
+You can disable any preset skill individually without losing the others.
+
+### Manual Activation
+
+From the dashboard (**Settings → Skills**) or CLI, you can enable any skill from the full catalog — regardless of which preset is active. This is useful when:
+
+- Your project doesn't use a preset (you wrote the constitution manually)
+- You need skills from multiple presets (e.g., React frontend + FastAPI backend)
+- You created custom skills
+
+## Browsing the Catalog
+
+### Dashboard
+
+Go to **Settings → Skills** to see all available skills. Each entry shows:
+
+- **Status icon** — ✓ active, ✗ disabled, ○ available
+- **Name** — skill identifier
+- **Source badge** — `preset`, `global`, `project`, or framework badges (`react`, `fastapi`, ...)
+- **Phases** — which phases the skill applies to
+
+Click a skill name to expand and view its full instructions. Click the status icon to toggle activation.
+
+### CLI
+
+```bash
+skaro skills list
+```
+
+Output:
+
+```
+  Preset: react
+
+  Skill                  Source   Status    Phases
+  typescript-strict      preset   active    implement, plan, fix
+  react-components       preset   active    implement, plan
+  react-testing          preset   active    implement, tests, plan
+  react-state            preset   active    implement, plan
+  fastapi-endpoints      bundled  available implement, plan, tests
+  django-patterns        bundled  available implement, plan
+  ...
+```
+
+```bash
+skaro skills info react-components
+```
+
+Shows the full instructions content.
+
+## Bundled Skills Reference
+
+Skaro ships 28 skills organized by stack:
+
+### Shared Skills
+
+These are reused across multiple presets:
+
+| Skill | Used By | Phases |
+|---|---|---|
+| `typescript-strict` | react, vue, sveltekit, nextjs, angular, express, nestjs, react-native | implement, plan, fix |
+| `python-standards` | fastapi, django | implement, plan, fix |
+| `pytest-patterns` | fastapi, django | implement, tests, plan |
+| `nodejs-backend` | express, nestjs | implement, plan, fix |
+| `react-components` | react, nextjs | implement, plan |
+| `react-testing` | react, nextjs | implement, tests, plan |
+
+### Per-Preset Skills
+
+| Preset | Skills |
+|---|---|
+| **react** | `typescript-strict`, `react-components`, `react-testing`, `react-state` |
+| **vue** | `typescript-strict`, `vue-composition`, `vue-testing` |
+| **sveltekit** | `typescript-strict`, `svelte-patterns`, `svelte-testing` |
+| **nextjs** | `typescript-strict`, `react-components`, `react-testing`, `nextjs-app-router` |
+| **angular** | `typescript-strict`, `angular-architecture`, `angular-testing` |
+| **fastapi** | `python-standards`, `fastapi-endpoints`, `fastapi-sqlalchemy`, `pytest-patterns` |
+| **django** | `python-standards`, `django-patterns`, `django-testing`, `pytest-patterns` |
+| **express** | `typescript-strict`, `nodejs-backend`, `express-patterns`, `express-testing` |
+| **nestjs** | `typescript-strict`, `nodejs-backend`, `nestjs-architecture`, `nestjs-testing` |
+| **react-native** | `typescript-strict`, `react-native-patterns`, `react-native-testing` |
+| **flutter** | `flutter-architecture`, `flutter-testing` |
+| **kotlin-mp** | `kotlin-mp-architecture`, `kotlin-mp-testing` |
+
+## Configuration in config.yaml
+
+The skills state is stored in `.skaro/config.yaml`:
+
+```yaml
+skills:
+  preset: react               # Active preset (set when you choose a constitution template)
+  active:                      # Manually enabled skills (non-preset)
+    - fastapi-endpoints
+    - our-custom-rules
+  disabled:                    # Explicitly disabled preset skills
+    - react-testing
+```
+
+- `preset` — set automatically when you select a constitution preset
+- `active` — skills you enabled manually (bundled, global, or project)
+- `disabled` — preset skills you turned off

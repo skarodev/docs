@@ -32,6 +32,7 @@
             "pages": [
               "cli/init",
               "cli/config",
+			  "cli/skills",
               "cli/update"
             ]
           },
@@ -47,6 +48,13 @@
               "providers/supported-providers"
             ]
           },
+		  {
+			  "group": "Skills",
+			  "pages": [
+				"skills/overview",
+				"skills/custom-skills"
+			  ]
+			},
           {
             "group": "Project Structure",
             "pages": [

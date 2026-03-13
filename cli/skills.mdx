@@ -1,0 +1,121 @@
+---
+title: "skaro skills"
+description: "Manage LLM skill packs from the command line."
+---
+
+`skaro skills` manages the LLM instruction packs that enhance code generation for your stack.
+
+## Commands
+
+### skaro skills list
+
+Show all available skills and their activation status.
+
+```bash
+skaro skills list
+```
+
+Output:
+
+```
+  Preset: react
+
+  Skill                  Source   Status    Phases
+  typescript-strict      preset   active    implement, plan, fix
+  react-components       preset   active    implement, plan
+  react-testing          preset   active    implement, tests, plan
+  react-state            preset   active    implement, plan
+  fastapi-endpoints      bundled  available implement, plan, tests
+  django-patterns        bundled  available implement, plan
+  our-api-rules          user     active    all
+```
+
+Status values:
+- **active** — skill is enabled and injected into LLM prompts
+- **disabled** — explicitly turned off
+- **available** — exists in the catalog but not enabled
+- **missing** — referenced in config but the file is not found
+
+### skaro skills info
+
+Show the full content of a specific skill.
+
+```bash
+skaro skills info react-components
+```
+
+Output:
+
+```
+  react-components
+  Best practices for React component design
+  Source: preset
+  Phases: implement, plan
+  Roles: coder
+
+  ┌──────────────────────────────────────────────────┐
+  │ ## React Component Rules                         │
+  │ - Functional components only — no class ...      │
+  │ - One component per file, file name matches ...  │
+  │ ...                                              │
+  └──────────────────────────────────────────────────┘
+```
+
+### skaro skills enable
+
+Activate a skill.
+
+```bash
+skaro skills enable fastapi-endpoints
+```
+
+For bundled/global/project skills, this adds the name to the `active` list in `config.yaml`. For preset skills that were previously disabled, this removes them from the `disabled` list.
+
+### skaro skills disable
+
+Deactivate a skill.
+
+```bash
+skaro skills disable react-testing
+```
+
+Adds the skill to the `disabled` list. Preset skills remain in the preset but are no longer injected into prompts.
+
+### skaro skills create
+
+Create a new custom skill from a template.
+
+```bash
+skaro skills create our-api-rules
+```
+
+Creates `.skaro/skills/our-api-rules.yaml` with a starter template. Edit the file, then enable:
+
+```bash
+skaro skills enable our-api-rules
+```
+
+## Examples
+
+**Enable skills for a full-stack project without using a preset:**
+
+```bash
+skaro skills enable typescript-strict
+skaro skills enable react-components
+skaro skills enable fastapi-endpoints
+skaro skills enable pytest-patterns
+```
+
+**Disable a preset skill you don't need:**
+
+```bash
+skaro skills disable react-testing
+```
+
+**Create and enable a custom team skill:**
+
+```bash
+skaro skills create team-conventions
+# Edit .skaro/skills/team-conventions.yaml
+skaro skills enable team-conventions
+```

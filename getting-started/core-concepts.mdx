@@ -45,7 +45,7 @@ A valid constitution must include six sections:
 5. **Security** — auth model, input validation, secrets storage
 6. **LLM Rules** — no stubs without justification, no duplication, always generate AI_NOTES
 
-You can validate completeness with `skaro constitution validate`. Skaro also ships [12 presets](/project-structure/constitution-presets) for popular frameworks (React, FastAPI, Django, etc.) to help you get started.
+You can validate completeness with `skaro constitution validate`. Skaro also ships [12 presets](/project-structure/constitution-presets) for popular frameworks (React, FastAPI, Django, etc.) to help you get started. Each preset automatically activates a matching set of [Skills](/skills/overview) — LLM instruction packs with framework-specific patterns.
 
 ## Artifacts
 
@@ -69,6 +69,26 @@ Skaro divides LLM work into three roles, each covering specific phases:
 Each role can use a different LLM provider and model. For example, you might use Claude for architecture decisions, Groq for fast code generation, and a local Ollama model for reviews. If a role is not configured, it falls back to the default LLM settings.
 
 See [Role-Based Routing](/providers/role-based-routing) for configuration details.
+
+## Skills
+
+Skills are YAML-based instruction packs that teach the LLM framework-specific patterns beyond what the constitution covers. While the constitution defines **what** your project uses (stack, standards), skills define **how** the LLM should write code for that stack.
+
+Skaro ships 28 bundled skills covering all 12 constitution presets. When you select a preset (e.g., React), the matching skills are activated automatically. You can also enable any skill individually from the full catalog, or create custom skills for your team's conventions.
+
+Skills are filtered by phase and role — a React component skill won't appear during the Tests phase, and a testing skill won't appear for the Architect role.
+
+```yaml
+# .skaro/config.yaml
+skills:
+  preset: react
+  active:
+    - our-api-conventions
+  disabled:
+    - react-testing
+```
+
+See [Skills](/skills/overview) for the full reference and [Custom Skills](/skills/custom-skills) for creating your own.
 
 ## Milestones & Tasks
 

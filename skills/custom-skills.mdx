@@ -1,0 +1,180 @@
+---
+title: "Custom Skills"
+description: "Create your own skills to teach the LLM your team's patterns and conventions."
+---
+
+Bundled skills cover common frameworks. Custom skills let you encode your team's specific conventions, internal APIs, architectural patterns, or domain knowledge.
+
+## Creating a Skill
+
+### From the CLI
+
+```bash
+skaro skills create our-api-rules
+```
+
+This creates `.skaro/skills/our-api-rules.yaml` with a template:
+
+```yaml
+name: our-api-rules
+description: ""
+version: "1.0"
+
+# phases:
+#   - implement
+#   - plan
+#   - tests
+# roles:
+#   - coder
+#   - reviewer
+
+instructions: |
+  ## our-api-rules
+  Add your instructions here.
+```
+
+### Manual Creation
+
+Create a `.yaml` file in `.skaro/skills/` (project) or `~/.skaro/skills/` (global):
+
+```yaml
+name: our-api-rules
+description: "Internal REST API conventions for our team"
+version: "1.0"
+
+phases:
+  - implement
+  - plan
+
+roles:
+  - coder
+
+instructions: |
+  ## API Conventions
+  - All endpoints return a wrapper: {"data": ..., "meta": {"request_id": "..."}}
+  - Errors: {"error": {"code": "...", "message": "..."}, "meta": {...}}
+  - Pagination: cursor-based, parameters `cursor` and `limit`
+  - Naming: kebab-case for URLs, snake_case for JSON fields
+  - All endpoints must have rate limiting
+```
+
+## Skill Format Reference
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | string | yes | Unique identifier. Must match the filename (without `.yaml`). |
+| `description` | string | no | Short description shown in the dashboard. |
+| `version` | string | no | Version for your own tracking. |
+| `phases` | list | no | Phases where this skill applies. Empty = all phases. |
+| `roles` | list | no | Roles where this skill applies. Empty = all roles. |
+| `instructions` | string | yes | The instructions injected into the LLM system prompt. |
+| `phase_instructions` | dict | no | Phase-specific overrides (see below). |
+
+### Phase-Specific Instructions
+
+A skill can provide different instructions depending on the phase. The `phase_instructions` field overrides `instructions` for specific phases:
+
+```yaml
+name: our-api-rules
+instructions: |
+  General API rules that apply to all phases.
+
+phase_instructions:
+  plan: |
+    When planning API endpoints, always specify:
+    - HTTP method and URL
+    - Request/response schemas
+    - Response codes
+    - Rate limits
+
+  tests: |
+    Each endpoint must have tests for:
+    - Happy path (200/201)
+    - Validation errors (422)
+    - Auth errors (401/403)
+    - Rate limiting (429)
+```
+
+If a phase has a specific instruction, it replaces (not appends to) the general `instructions` for that phase. Phases without an override use the general `instructions`.
+
+### Valid Phase Names
+
+`clarify`, `plan`, `implement`, `tests`, `fix`, `architecture`, `devplan`, `import_analyze`
+
+### Valid Role Names
+
+`architect`, `coder`, `reviewer`
+
+## Enabling a Custom Skill
+
+Creating the file is not enough — you must enable it:
+
+```bash
+skaro skills enable our-api-rules
+```
+
+Or toggle it in **Settings → Skills** in the dashboard.
+
+<Note>
+  Project skills (`.skaro/skills/`) and global skills (`~/.skaro/skills/`) must be explicitly enabled via the `active` list. Only preset skills are active by default.
+</Note>
+
+## Disabling a Skill
+
+```bash
+skaro skills disable our-api-rules
+```
+
+This adds the skill to the `disabled` list in `config.yaml`. For preset skills, this prevents them from being injected even though the preset is active.
+
+## Tips for Writing Good Skills
+
+**Be specific.** Vague instructions like "write clean code" don't help. Instead: "Use `async/await` for all I/O operations. Never call sync functions inside async context."
+
+**Target the right phases.** A skill about component hierarchy patterns belongs in `plan` and `implement`, not in `tests`.
+
+**Target the right roles.** Testing rules should include the `reviewer` role. Architecture patterns typically target `coder` only.
+
+**Keep it focused.** One skill per concern. Don't put testing rules, component patterns, and state management in the same skill.
+
+**Don't repeat the constitution.** The constitution is already in the system prompt. Skills should add framework-specific patterns that go beyond what the constitution covers.
+
+## Example: Full-Stack Project
+
+A project with a React frontend and FastAPI backend might use:
+
+```yaml
+# .skaro/config.yaml
+skills:
+  active:
+    # Frontend (from bundled catalog)
+    - typescript-strict
+    - react-components
+    - react-testing
+    - react-state
+    # Backend (from bundled catalog)
+    - python-standards
+    - fastapi-endpoints
+    - fastapi-sqlalchemy
+    - pytest-patterns
+    # Custom team rules
+    - our-api-rules
+    - our-auth-patterns
+```
+
+No preset is needed — each skill is enabled individually.
+
+## Global Skills
+
+Skills in `~/.skaro/skills/` are available to all your projects. Use them for personal conventions that you apply everywhere:
+
+```yaml
+# ~/.skaro/skills/prefer-composition.yaml
+name: prefer-composition
+instructions: |
+  Prefer composition over inheritance.
+  Use dependency injection instead of hard-coded dependencies.
+  Favor small, focused functions over large monolithic ones.
+```
+
+Enable globally — it will be available in every project's catalog.
