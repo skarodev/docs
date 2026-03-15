@@ -56,6 +56,12 @@
 			  ]
 			},
           {
+            "group": "Customization",
+            "pages": [
+              "customization/custom-prompts"
+            ]
+          },
+          {
             "group": "Project Structure",
             "pages": [
               "project-structure/skaro-directory"

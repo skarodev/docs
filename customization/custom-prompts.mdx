@@ -1,0 +1,96 @@
+---
+title: "Custom Prompts"
+description: "Override built-in LLM prompts to control how each phase generates output."
+---
+
+Custom prompts let you replace the built-in prompt template for any phase with your own version. This gives advanced users full control over LLM instructions without forking the project.
+
+## How It Works
+
+When a phase runs, Skaro loads its prompt template using a two-step lookup:
+
+1. **Project override** — `.skaro/prompts/{name}.md`
+2. **Built-in default** — `skaro_core/prompts/{name}.md` (inside the package)
+
+If a project-level file exists, it is used **instead of** the built-in. If not, the built-in template is used as usual. This means existing projects are not affected — the feature is fully opt-in.
+
+## Quick Start
+
+<Steps>
+  <Step title="Create the prompts directory">
+    ```powershell
+    mkdir .skaro\prompts
+    ```
+  </Step>
+
+  <Step title="Copy the built-in prompt you want to customize">
+    Find the original in the Skaro package (`src/skaro_core/prompts/`) and copy it:
+
+    ```powershell
+    # Example: customize the Clarify phase prompt
+    cp (pip show skaro | Select-String Location).ToString().Split()[-1]\skaro_core\prompts\clarify.md .skaro\prompts\clarify.md
+    ```
+
+    Or simply create a new file from scratch — only the filename must match.
+  </Step>
+
+  <Step title="Edit the prompt">
+    Open `.skaro/prompts/clarify.md` in your editor and modify the instructions as needed.
+  </Step>
+
+  <Step title="Run the phase">
+    The next time the Clarify phase runs, Skaro will use your custom prompt automatically. No configuration changes required.
+  </Step>
+</Steps>
+
+## Available Prompts
+
+Each filename corresponds to a specific phase or sub-action:
+
+| File | Phase | Description |
+|---|---|---|
+| `clarify.md` | Clarify | Questions to find gaps in the task spec |
+| `plan.md` | Plan | Stage-by-stage implementation plan |
+| `implement.md` | Implement | Code generation instructions |
+| `review.md` | Review | Cross-validation and code review |
+| `architecture.md` | Architecture | Architecture document review |
+| `architecture-chat.md` | Architecture | Interactive architecture chat |
+| `architecture-apply.md` | Architecture | Apply review recommendations |
+| `adr-generate.md` | Architecture | Generate Architecture Decision Records |
+| `devplan.md` | DevPlan | Create a development plan |
+| `devplan-imported.md` | DevPlan | Plan for imported projects |
+| `devplan-update.md` | DevPlan | Update an existing plan |
+| `repo-analyze.md` | Import | Analyze existing repository |
+| `repo-architecture.md` | Import | Extract architecture from code |
+| `repo-completed-work.md` | Import | Detect completed work |
+| `repo-constitution.md` | Import | Generate constitution from code |
+
+## Placeholders
+
+Some prompts contain placeholders that Skaro replaces at runtime (e.g., `{spec_template}`, `{review_section}`, `{user_guidance}`). **Keep these placeholders intact** in your custom prompt — Skaro substitutes them with actual content before sending to the LLM.
+
+If you remove a placeholder, the corresponding context will not be injected.
+
+## Skills vs Custom Prompts
+
+Skills and custom prompts both customize LLM behavior, but at different levels:
+
+| | Skills | Custom Prompts |
+|---|---|---|
+| **Scope** | Appended to the system prompt | Replace the entire phase prompt |
+| **Format** | YAML with `instructions` field | Full Markdown prompt template |
+| **Granularity** | Additive — multiple skills combine | One override per phase |
+| **Use case** | Add conventions and patterns | Change the fundamental instructions |
+
+<Note>
+  Start with skills for most customization needs. Custom prompts are for cases where you need to fundamentally change how a phase asks the LLM to behave — for example, changing the output format, adding domain-specific reasoning steps, or restructuring the prompt flow entirely.
+</Note>
+
+## Version Control
+
+The `.skaro/prompts/` directory can be committed to Git if prompts are shared across the team, or added to `.gitignore` if they are personal preferences.
+
+```gitignore
+# Personal prompt overrides (optional)
+.skaro/prompts/
+```

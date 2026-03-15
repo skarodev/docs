@@ -43,6 +43,9 @@ The `.skaro/` directory is the heart of every Skaro project. It contains all art
 ├── docs/
 │   └── review-log.md             # Cross-validation log
 │
+├── prompts/                       # Custom prompt overrides (optional)
+│   └── *.md                       # Override any built-in phase prompt
+│
 ├── ops/
 │   ├── devops-notes.md
 │   └── security-review.md
@@ -101,6 +104,10 @@ Add `.skaro/` to Git — **except** files that are auto-gitignored by `skaro ini
 | `usage_log.jsonl` | ❌ | Local tracking data |
 | `state.yaml` | ✅ | Phase progress |
 | Everything else | ✅ | Project artifacts |
+
+<Note>
+  `.skaro/prompts/` is optional — commit if prompts are shared across the team, or add to `.gitignore` if personal. See [Custom Prompts](/customization/custom-prompts) for details.
+</Note>
 
 ## Root-Level Files
 
